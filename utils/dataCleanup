@@ -1,0 +1,39 @@
+#! /usr/bin/env node --harmony_arrow_functions
+
+/* eslint no-console: 0 */
+'use strict';
+
+const fs = require('fs');
+const files = process.argv.slice(2);
+const resolve = require('path').resolve;
+const filePaths = files.map(file => resolve(__dirname, file));
+const makeListOfMovieObjs = (listOfMovieData) => {
+  return listOfMovieData.map(movie => {
+    if (!movie[10]) return null; // if no address for movie, ignore it
+    return {
+      name: movie[8],
+      year: movie[9],
+      address: movie[10],
+      funFact: movie[11],
+      productionCompany: movie[12],
+      distributor: movie[13],
+      director: movie[14],
+      writer: movie[15],
+      actors: movie.slice(16)
+    };
+  }).filter(v => !!v); // filter nulls
+};
+
+// side effecting in here hence the forEach
+filePaths.forEach(filePath => {
+  fs.readFile(filePath, { encoding: 'utf8' }, function(err, contents) {
+    if (err) throw err; // fail quick
+    const movieLocations = JSON.parse(contents); // assuming file can fit in memory and also gonna fail quickly here hence no try catch
+
+    // write data to stdout so that it can be piped anywhere
+    // also, data from all file is written to stdout to make it easy to create one big file
+    // that contains cleaned up data from many small files that were cleaned
+    if (Array.isArray(movieLocations)) console.log(JSON.stringify(makeListOfMovieObjs(movieLocations)));
+    else console.log(JSON.stringify(makeListOfMovieObjs(movieLocations.data)));
+  });
+});
