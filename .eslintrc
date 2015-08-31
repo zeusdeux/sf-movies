@@ -29,7 +29,7 @@
     "templateStrings": true,
     "unicodeCodePointEscapes": true,
     "globalReturn": true,
-	  "jsx": true
+    "jsx": true
   },
   "rules": {
     "comma-dangle": 0,
@@ -130,6 +130,15 @@
     "spaced-comment": [1, "always", {"markers": ["@"]}],
     //es6 specific
     "no-var": 2,
-    "generator-star-spacing": [2, "after"]
+    "generator-star-spacing": [2, "after"],
+    //react rules
+    //"react/jsx-closing-bracket-location": [1, {"location": "tag-aligned"}],
+    //"react/jsx-no-duplicate-props": [1, {"ignoreCase": true}],
+    //"react/jsx-no-undef": 2,
+    //"react/no-did-mount-set-state": [2, "allow-in-func"],
+    //"react/no-did-update-set-state": 2,
+    //"react/no-unknown-property": 2,
+    //"react/react-in-jsx-scope": 2,
+    //"react/self-closing-comp": 2
   }
 }
