@@ -1,6 +1,6 @@
 {
   "name": "sf-movies",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -25,5 +25,21 @@
     "reactify": "^1.1.1",
     "should": "^7.1.0",
     "uglify-js": "^2.4.24"
-  }
+  },
+  "description": "Shows on a map where movies have been filmed in SF",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeusdeux/sf-movies.git"
+  },
+  "keywords": [
+    "sf",
+    "movies"
+  ],
+  "author": "Mudit Ameta",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zeusdeux/sf-movies/issues"
+  },
+  "homepage": "https://github.com/zeusdeux/sf-movies#readme"
 }
