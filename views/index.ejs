@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <title>SF movies</title>
+    <link rel='stylesheet' href='/css/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeZAKaK5UwQvtWn5bSjqz-OkrDbfSa9lU" type="text/javascript"></script>
+    <% if (dev) { %>
+      <script src="/js/bundle.js"></script>
+    <% } else { %>
+      <script src="/js/bundle.min.js"></script>
+    <% } %>
   </body>
 </html>
