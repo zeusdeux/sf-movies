@@ -13,7 +13,7 @@ const SearchBarComponent = React.createClass({
     return (
       <div className="searchbar-container">
         <input type="text" name="q" valueLink={this.linkState('query')} />
-        <input type="button" name="search" value="search" onClick={ this._onSearch } />
+        <input type="button" className="btn" name="search" value="Search" onClick={ this._onSearch } />
       </div>
     )
   }
