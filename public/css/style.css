@@ -14,15 +14,40 @@ html, body {
   top: 1.5em;
   left: 10em;
   z-index: 1;
-  width: 400px;
+  width: 100%;
+  min-width: 320px;
+  max-width: 500px;
   box-shadow: 5px 5px 10px 2px #797878;
+  max-height: 40px;
 }
 
 .map-search-container > .searchbar-container > input[type=text] {
   height: 40px;
   font-size: 1em;
-  width: 100%;
+  width: 80%;
   border: 1px solid #B7B7B7;
   padding: 10px;
   box-sizing: border-box;
+}
+
+.map-search-container > .searchbar-container > .btn {
+  display: inline-block;
+  height: 40px;
+  border: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  top: -1px;
+  width: 20%;
+  color: #fff;
+  background-color: #B3B3B3;
+  font-size: 0.9em;
+  line-height: 0;
+  box-sizing: border-box;
+  border: 1px solid #AFABAB;
+}
+
+.map-search-container > .searchbar-container > .btn:hover {
+  background-color: #ddd;
+  cursor: pointer;
 }

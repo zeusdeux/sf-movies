@@ -22465,7 +22465,7 @@ const SearchBarComponent = React.createClass({displayName: "SearchBarComponent",
     return (
       React.createElement("div", {className: "searchbar-container"}, 
         React.createElement("input", {type: "text", name: "q", valueLink: this.linkState('query')}), 
-        React.createElement("input", {type: "button", name: "search", value: "search", onClick:  this._onSearch})
+        React.createElement("input", {type: "button", className: "btn", name: "search", value: "search", onClick:  this._onSearch})
       )
     )
   }
