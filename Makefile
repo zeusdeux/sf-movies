@@ -26,5 +26,3 @@ clean:
 	@$(RM) $(PUBLICJS)/bundle.js $(PUBLICJS)/bundle.min.js
 
 .PHONY: all clean
-
-# git pull --rebase origin master && git reset --hard origin/master && pm2 delete schema-check && NODE_ENV=production PORT=8008 DEBUG=schema-check:* pm2 start -x ./bin/server --name "schema-check"
