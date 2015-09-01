@@ -25,4 +25,7 @@ clean:
 	@$(RM) $(PUBLICCSS)/style.min.css
 	@$(RM) $(PUBLICJS)/bundle.js $(PUBLICJS)/bundle.min.js
 
-.PHONY: all clean
+watch:
+	fswatch -o views/ bin/ data/ models/ routes/ utils/ | xargs -n1 -I% make
+
+.PHONY: all clean watch
