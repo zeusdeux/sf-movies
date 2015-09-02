@@ -82,13 +82,20 @@ function makeMovieLocation(name, year, address, director, optionals) {
 
 // find :: Int -> MovieLocation
 function find(id) {
-  d('Id %d', id);
-  assert(isYear(id), 'id should be an integer');
-  return db[id];
+  d('Id %s', id);
+  assert(isNonFalsyAndString(id), 'id should be non-falsy and a string');
+
+  for (let i = 0; i < db.length; i++) {
+    let curr = db[i];
+
+    if (id === curr.id) return i;
+  }
+  return -1;
 }
 
 // insert :: MovieLocation -> Either Error Int
 function insert(movieLocation) {
+  d('insert: movie location being inserted is %o', movieLocation);
   try {
     if (isMovieLocation(movieLocation)) return db.push(movieLocation);
   }
