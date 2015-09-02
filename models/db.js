@@ -104,13 +104,26 @@ function insert(movieLocation) {
   }
 }
 
+// update ::
+function update(id, obj) {
+  let index = find(id);
+
+  assert(isInt(index), 'index should be an integer');
+  d('update: id %s obj %o and found id at index %d', id, obj, index);
+
+  if (index > -1) Object.keys(obj).forEach(key => db[index][key] = obj[key]);
+  else throw new Error('Id ' + id + ' not found');
+}
+
 // sliceAsArrayFromId :: Int -> Maybe [MovieLocation]
-function sliceAsArrayFromId(id) {
-  assert(isYear(id), 'id should be an integer');
-  const slicedDb = db.slice(id);
+function sliceAsArrayFromId(id, toId) {
+  d(db.length);
+  d('id %d toId %d count %d', id, toId, toId - id);
+  assert(isInt(id), 'id should be an integer');
+  const slicedDb = toId ? db.slice(id, toId) : db.slice(id);
 
   d('db as array from id %d is %o', id, slicedDb);
-  return db.slice(id);
+  return slicedDb;
 }
 
 // writeToFile :: Maybe FilePath -> IO ()
@@ -138,6 +151,7 @@ function panicDumpToFile(filePath) {
 module.exports = {
   find,
   insert,
+  update,
   writeToFile,
   panicDumpToFile,
   makeMovieLocation,
