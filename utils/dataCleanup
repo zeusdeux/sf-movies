@@ -11,6 +11,7 @@ const makeListOfMovieObjs = (listOfMovieData) => {
   return listOfMovieData.map(movie => {
     if (!movie[10]) return null; // if no address for movie, ignore it
     return {
+      id: movie[1],
       name: movie[8],
       year: movie[9],
       address: movie[10],
