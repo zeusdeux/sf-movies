@@ -1,9 +1,9 @@
-'use strict';
-
 const React              = require('react/addons');
+const d                  = require('debug')('sfMovies:search');
 const SearchBarComponent = React.createClass({
   mixins: [React.addons.LinkedStateMixin],
   _onSearch: function(e) {
+    d('onSearch: Query is %s', this.state.query);
     this.props.onSearch(this.state.query, e);
   },
   getInitialState: function() {
