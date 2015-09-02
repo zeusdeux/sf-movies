@@ -17,7 +17,7 @@ html, body {
   width: 100%;
   min-width: 320px;
   max-width: 500px;
-  box-shadow: 5px 5px 10px 2px #797878;
+  box-shadow: 6px 6px 10px 0px #525252;
   max-height: 40px;
 }
 
@@ -33,21 +33,23 @@ html, body {
 .map-search-container > .searchbar-container > .btn {
   display: inline-block;
   height: 40px;
-  border: none;
   margin: 0;
   padding: 0;
   position: relative;
   top: -1px;
   width: 20%;
   color: #fff;
-  background-color: #B3B3B3;
+  background-color: #33ACFF;
   font-size: 0.9em;
   line-height: 0;
   box-sizing: border-box;
-  border: 1px solid #AFABAB;
+  border: 1px solid #099BFF;
+  border-left: none;
 }
 
 .map-search-container > .searchbar-container > .btn:hover {
-  background-color: #ddd;
+  background-color: #5EBAF9;
+  border: 1px solid #33ACFF;
+  border-left: none;
   cursor: pointer;
 }
