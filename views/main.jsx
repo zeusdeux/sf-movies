@@ -1,7 +1,5 @@
-'use strict';
-
 const React              = require('react');
-const d                  = require('debug')('main');
+const d                  = require('debug')('sfMovies:main');
 const MapComponent       = require('./mapComponent.jsx');
 const MainComponent      = React.createClass({
   getInitialState: function() {
