@@ -1,10 +1,9 @@
+/* eslint new-cap: 0 */
 'use strict';
 
-/* eslint new-cap: 0 */
-
 const express       = require('express');
+const d             = require('debug')('sfMovies:routes');
 const movieLocModel = require('../models/movieLocationsModel');
-const d             = require('debug')('routes');
 let router          = express.Router();
 
 
@@ -16,13 +15,21 @@ router.get('/', function(_, res) {
 /* GET <count> movie location objects, starting from <id> */
 // a list of movie location objects is returned
 router.get('/locations', (req, res, next) => {
-  try {
-    const count    = req.query.count || 5;
-    const offsetId = req.query.offset || req.session.lastIdSent || 0;
-    const data     = movieLocModel.get(count, offsetId);
+  d('GET /locations: query %o', req.query);
 
-    d('count %d offsetId %d\ndata %o', data);
-    req.session.lastIdSent = offsetId + count;
+  const count  = parseInt(req.query.count, 10) || 5;
+  const fromId = parseInt(req.query.from || req.session.lastIdSent || 0, 10);
+
+  d('GET /locations: count %d fromId %d', count, fromId);
+
+  try {
+    const data = movieLocModel.getSlice(fromId + count, fromId);
+
+    d('GET /locations: data %o', data);
+
+    req.session.lastIdSent = fromId + count;
+    d('GET /locations: updates session %o', req.session);
+
     res.json(data);
   }
   catch(e) {
@@ -37,8 +44,8 @@ router.get('/complete', (req, res, next) => {
   // for example, if type === 'name' then we send valid
   // name completions.
   // type can be any valid key/column in the db
-  const type = req.query.type;
   const predicate = req.query.q;
+  const type      = req.query.type;
 
   try {
     res.json(movieLocModel.filter(type, predicate));
@@ -50,9 +57,11 @@ router.get('/complete', (req, res, next) => {
 
 /* POST lat, lang for a location. Add lat long to db for given location id */
 router.post('/update/:id', (req, res, next) => {
+  const lat   = req.body.lat; // get post param from body
+  const long  = req.body.long; // get post param from body
   const locId = req.params.id;
-  const lat = req.query.lat;
-  const long = req.query.long;
+
+  d('POST /update/:id: req body is %o', req.body);
 
   try {
     movieLocModel.update(locId, { lat, long });
