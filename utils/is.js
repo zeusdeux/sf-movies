@@ -12,14 +12,21 @@ function isArray(a) {
 
 // isNum :: a -> Bool
 function isNum(val) {
-  return !!isNaN(parseFloat(val, 10));
+  return !isNaN(parseFloat(val, 10));
+}
+
+// isInt :: a -> Bool
+function isInt(val) {
+  const valAsStr = val + '';
+
+  return isNum(val) && -1 === valAsStr.indexOf('.');
 }
 
 // isYear :: a -> Bool
 function isYear(val) {
   const valAsStr = val + '';
 
-  return isNum(val) && -1 === valAsStr.indexOf('.') && 4 === valAsStr.length;
+  return isInt(val) && 4 === valAsStr.length;
 }
 
 // isFalse :: a -> Bool
@@ -42,6 +49,7 @@ module.exports = {
   isArray,
   isFalsy,
   isYear,
+  isInt,
   and,
   or
 };
