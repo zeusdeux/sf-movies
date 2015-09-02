@@ -2,12 +2,13 @@
 
 const fs       = require('fs');
 const assert   = require('assert');
-const d        = require('debug')('db');
+const d        = require('debug')('sfMovies:db');
 const is       = require('../utils/is');
-const db       = require('../data/movie-locations-cleaned');
+const db       = require('../data/movie-locations-cleaned').slice(0, 20);
 
 const and      = is.and;
 const isNum    = is.isNum;
+const isInt    = is.isInt;
 const isYear   = is.isYear;
 const isFalsy  = is.isFalsy;
 const isArray  = is.isArray;
