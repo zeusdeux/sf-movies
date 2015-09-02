@@ -40,6 +40,7 @@ function isNonFalsyAndString(val) {
 
 // isMovieLocation :: Object -> Either Error Bool
 function isMovieLocation(obj) {
+  d('isMovieLocation: object to test is %o', obj);
   assert(obj.hasOwnProperty('name') && isNonFalsyAndString(obj.name), 'name should be a non-empty string');
   assert(obj.hasOwnProperty('year') && isYear(obj.year), 'year should be a 4 digit integer');
   assert(obj.hasOwnProperty('address') && isNonFalsyAndString(obj.address), 'address should be a non-empty string');
