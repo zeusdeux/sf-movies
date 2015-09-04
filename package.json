@@ -33,6 +33,18 @@
     "should": "^7.1.0",
     "uglify-js": "^2.4.24"
   },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "optional": [
+            "runtime"
+          ]
+        }
+      ]
+    ]
+  },
   "description": "Shows on a map where movies have been filmed in SF",
   "main": "app.js",
   "repository": {
