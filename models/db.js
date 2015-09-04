@@ -115,8 +115,8 @@ function update(id, obj) {
   else throw new Error('Id ' + id + ' not found');
 }
 
-// sliceAsArrayFromId :: Int -> Maybe [MovieLocation]
-function sliceAsArrayFromId(id, toId) {
+// sliceAsArrayFromIndex :: Int -> Maybe [MovieLocation]
+function sliceAsArrayFromIndex(id, toId) {
   d(db.length);
   d('id %d toId %d count %d', id, toId, toId - id);
   assert(isInt(id), 'id should be an integer');
@@ -155,5 +155,5 @@ module.exports = {
   writeToFile,
   panicDumpToFile,
   makeMovieLocation,
-  sliceAsArrayFromId
+  sliceAsArrayFromIndex
 };

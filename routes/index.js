@@ -44,11 +44,17 @@ router.get('/complete', (req, res, next) => {
   // for example, if type === 'name' then we send valid
   // name completions.
   // type can be any valid key/column in the db
-  const predicate = req.query.q;
-  const type      = req.query.type;
+  const query  = req.query.q;
+  const rankBy = req.query.rankBy;
+
+  d('GET /complete: rankBy %s query %s', rankBy, query);
 
   try {
-    res.json(movieLocModel.filter(type, predicate));
+    // rank by name by default
+    const completions = movieLocModel.filter(rankBy || 'name', query);
+
+    d('GET /complete: completions: %o', completions);
+    res.json(completions);
   }
   catch(e) {
     next(e);
