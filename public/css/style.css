@@ -5,6 +5,30 @@ html, body {
   width: 100%;
 }
 
+ul, li {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
+.map-search-container circle {
+  stroke: #5691EC;
+}
+
+.map-search-container .loader {
+  position: absolute;
+  top: -2px;
+  right: 20.2%;
+  z-index: 2;
+}
+
+.map-search-container .displayNone {
+  display: none;
+}
+
 .map-search-container, .map-search-container > .map-container {
   height: 100%;
 }
@@ -26,7 +50,7 @@ html, body {
   font-size: 1em;
   width: 80%;
   border: 1px solid #B7B7B7;
-  padding: 10px;
+  padding: 10px 47px 10px 10px;
   box-sizing: border-box;
 }
 
@@ -52,4 +76,23 @@ html, body {
   border: 1px solid #33ACFF;
   border-left: none;
   cursor: pointer;
+}
+
+.map-search-container > .searchbar-container > .autocompletions-container {
+  background-color: white;
+  width: 80%;
+  box-sizing: border-box;
+  padding: 5px;
+  box-shadow: 6px 6px 10px 0px #525252;
+}
+
+.map-search-container > .searchbar-container > .autocompletions-container li {
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.map-search-container > .searchbar-container > .autocompletions-container li:hover {
+  cursor: pointer;
+  background: #ccc;
+  color: white;
 }
