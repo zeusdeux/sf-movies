@@ -120,7 +120,10 @@ function update(id, obj) {
 function sliceAsArrayFromIndex(fromIndex, toIndex) {
   d(db.length);
   d('from index %d toIndex %d count %d', fromIndex, toIndex, toIndex - fromIndex);
-  assert(isInt(fromIndex) && isInt(toIndex), 'fromIndex and toIndex should be integers');
+
+  assert(isInt(fromIndex), 'fromIndex should be an integer');
+  if (toIndex) assert(isInt(toIndex), 'toIndex should be an integer');
+
   const slicedDb = toIndex ? db.slice(fromIndex, toIndex) : db.slice(fromIndex);
 
   d('db as array from index %d is %o', fromIndex, slicedDb);
