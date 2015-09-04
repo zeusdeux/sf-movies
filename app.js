@@ -30,6 +30,7 @@ app.use(session({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// mount routes at /
 app.use('/', routes);
 
 // catch 404 and forward to error handler
