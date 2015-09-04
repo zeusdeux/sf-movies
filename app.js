@@ -3,8 +3,8 @@ const logger       = require('morgan');
 const express      = require('express');
 // const favicon   = require('serve-favicon');
 const bodyParser   = require('body-parser');
-// const cookieParser = require('cookie-parser');
 const session      = require('express-session');
+const RedisStore = require('connect-redis')(session);
 
 const app          = express();
 const routes       = require('./routes/index');
@@ -21,10 +21,8 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(cookieParser({
-//   secret: omgSecret
-// }));
 app.use(session({
+  store: new RedisStore(),
   secret: omgSecret,
   name: 'sf-movies-cookie',
   resave: false,
