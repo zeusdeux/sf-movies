@@ -27,6 +27,7 @@ data MovieLocation = { name :: String
                      , actors :: Maybe [String]
                      }
 
+type Id = String
 */
 
 
@@ -80,7 +81,7 @@ function makeMovieLocation(name, year, address, director, optionals) {
   };
 }
 
-// find :: Int -> MovieLocation
+// find :: Id -> MovieLocation
 function find(id) {
   d('Id %s', id);
   assert(isNonFalsyAndString(id), 'id should be non-falsy and a string');
@@ -104,7 +105,7 @@ function insert(movieLocation) {
   }
 }
 
-// update ::
+// update :: Id -> Object -> IO ()
 function update(id, obj) {
   let index = find(id);
 
@@ -116,13 +117,13 @@ function update(id, obj) {
 }
 
 // sliceAsArrayFromIndex :: Int -> Maybe [MovieLocation]
-function sliceAsArrayFromIndex(id, toId) {
+function sliceAsArrayFromIndex(fromIndex, toIndex) {
   d(db.length);
-  d('id %d toId %d count %d', id, toId, toId - id);
-  assert(isInt(id), 'id should be an integer');
-  const slicedDb = toId ? db.slice(id, toId) : db.slice(id);
+  d('from index %d toIndex %d count %d', fromIndex, toIndex, toIndex - fromIndex);
+  assert(isInt(fromIndex) && isInt(toIndex), 'fromIndex and toIndex should be integers');
+  const slicedDb = toIndex ? db.slice(fromIndex, toIndex) : db.slice(fromIndex);
 
-  d('db as array from id %d is %o', id, slicedDb);
+  d('db as array from index %d is %o', fromIndex, slicedDb);
   return slicedDb;
 }
 
@@ -137,7 +138,6 @@ function writeToFile(filePath, cb) {
     return cb(e);
   }
 }
-
 
 // call this only when things are going to complete shit
 // for example, on app.error or on SIGINT/SIGTERM
