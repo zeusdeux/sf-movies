@@ -21587,8 +21587,6 @@ var MapComponent = React.createClass({
   _onSearch: function _onSearch(address, e) {
     var _this3 = this;
 
-    var self = this;
-
     this.state.geocoder.geocode({ address: address }, function (results, status) {
       if (_this3.props.gmap.GeocoderStatus.OK) {
         var _location = results[0].geometry.location;
