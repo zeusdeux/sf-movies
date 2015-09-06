@@ -53,11 +53,17 @@ router.get('/geocode/:locationId', (req, res, next) => {
   d('GET /geocode/:locationId: %s', locationId);
 
   try {
+    // find is synchronous for now since the simple in-memory db,
+    // being a map, can look up the id in constant time
     const loc = movieLocModel.find(locationId);
 
     // if location already has lat and long, return it as is
+    // else geocode it using the google api
     if (loc.lat && loc.long) res.json(loc);
     else {
+      // get rid of 'from <whatever>' which is seen in some addresses
+      // append SF, CA just in case the address doesn't have it
+      // Even if they get repeated, Google ignores the repeated state and city name anyway
       const address = encodeURIComponent(loc.address.split(/\bfrom\b/i)[0].trim() + ', San Francisco, CA');
 
       // make request to google's geocoding api for the given address
@@ -67,22 +73,28 @@ router.get('/geocode/:locationId', (req, res, next) => {
         d('GET /geocode/:locationId: address %s', address);
         d('GET /geocode/:locationId: body', body);
 
-        if (err) next(err);
-        if (response.statusCode >= 200 && response.statusCode < 300) {
-          body = JSON.parse(body);
+        try {
+          if (err) throw err;
+          if (response.statusCode >= 200 && response.statusCode < 300) {
+            body = JSON.parse(body); // JSON parse since we are hitting the JSON endpoint
 
-          d('GET /geocode/:locationId: google response status %s', body.status);
-          d('GET /geocode/:locationId: lat, long: %o', body.results[0].geometry.location);
-          if ('OK' === body.status) {
-            const location = body.results[0].geometry.location;
+            d('GET /geocode/:locationId: google response status %s', body.status);
+            d('GET /geocode/:locationId: lat, long: %o', body.results[0].geometry.location);
 
-            loc.lat = location.lat;
-            loc.long = location.lng;
+            if ('OK' === body.status) {
+              const location = body.results[0].geometry.location;
 
-            movieLocModel.update(loc.id, loc);
-            res.json(loc);
-          } else next(new Error('Could not geocode location'));
-        } else next(new Error(response.statusMessage));
+              loc.lat = location.lat;
+              loc.long = location.lng;
+
+              movieLocModel.update(loc.id, loc);
+              res.json(loc);
+            } else throw new Error('Could not geocode location');
+          } else throw new Error(response.statusMessage);
+        }
+        catch(e) {
+          next(e);
+        }
       });
     }
   }
