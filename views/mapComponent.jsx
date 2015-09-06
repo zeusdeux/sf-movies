@@ -220,12 +220,6 @@ const MapComponent       = React.createClass({
           });
 
           marker.addListener('click', () => {
-            /*
-            for (let m of this.state.markers.values()) {
-              if (m !== marker && m.__infoWindowOpen__) m.__infoWindow__.close();
-            }
-            marker.__infoWindow__ = infoWindow;
-            */
             if (marker.__infoWindowOpen__) {
               infoWindow.close(this.state.map, marker);
               marker.__infoWindowOpen__ = false;
