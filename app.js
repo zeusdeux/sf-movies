@@ -1,15 +1,16 @@
-const path         = require('path');
-const logger       = require('morgan');
-const express      = require('express');
-// const favicon   = require('serve-favicon');
-const bodyParser   = require('body-parser');
-const session      = require('express-session');
+const path       = require('path');
+const logger     = require('morgan');
+const express    = require('express');
+// const favicon = require('serve-favicon');
+const bodyParser = require('body-parser');
+const session    = require('express-session');
 const RedisStore = require('connect-redis')(session);
 
-const app          = express();
-const routes       = require('./routes/index');
+const app        = express();
+const routes     = require('./routes/index');
 
-const omgSecret    = 'e1uRhhMyUzdnAkB/IV7DhaHv0O5C5HbTsjSCDs6IN8aCIPCz6EDJ2aXHqm9WDo5JqbOPR8R8sjhmBlxYuEqbhHugDHk6pPmJOxr3PmDHFTlldNrQZDiHSxhBSqp8CLCsYMwauo0CqVkYzDtG+NGlVyo9flmUq2eTihvVx2T++aE=';
+const omgSecret  = 'e1uRhhMyUzdnAkB/IV7DhaHv0O5C5HbTsjSCDs6IN8aCIPCz6EDJ2aXHqm9WDo5JqbOPR8R8sjhmBlxYuEqbhHugDHk6pPmJOxr3PmDHFTlldNrQZDiHSxhBSqp8CLCsYMwauo0CqVkYzDtG+NGlVyo9flmUq2eTihvVx2T++aE=';
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
