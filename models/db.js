@@ -40,10 +40,8 @@ data MovieLocation = { name :: String
                      }
 
 type Id = String
+
 */
-
-
-// db :: [MovieLocation]
 
 
 // isNonFalsyAndString :: a -> Bool
@@ -78,19 +76,6 @@ function find(id) {
   return db[id];
 }
 
-// findIndex :: Id -> Int
-function findIndex(id) {
-  d('Id %s', id);
-  assert(isNonFalsyAndString(id), 'id should be non-falsy and a string');
-
-  for (let i = 0; i < db.length; i++) {
-    let curr = db[i];
-
-    if (id === curr.id) return i;
-  }
-  return -1;
-}
-
 // insert :: MovieLocation -> Either Error Int
 function insert(movieLocation) {
   d('insert: movie location being inserted is %o', movieLocation);
@@ -111,7 +96,7 @@ function update(id, obj) {
   else throw new Error('Id ' + id + ' not found');
 }
 
-// sliceAsArrayFromIndex :: Int -> Maybe [MovieLocation]
+// sliceAsArrayFromIndex :: Int -> Maybe Int -> [MovieLocation]
 function sliceAsArrayFromIndex(fromIndex, toIndex) {
   d('from index %d toIndex %d count %d', fromIndex, toIndex, toIndex - fromIndex);
 
@@ -155,7 +140,6 @@ module.exports = {
   find,
   insert,
   update,
-  findIndex,
   writeToFile,
   panicDumpToFile,
   sliceAsArrayFromIndex
