@@ -93,8 +93,6 @@ const MapComponent       = React.createClass({
       .catch(e => d('fetchAndMarkLocations: Something went wrong!\n%o', e));
   },
   _onSearch(address, e) {
-    const self = this;
-
     this.state.geocoder.geocode({ address }, (results, status) => {
       if (this.props.gmap.GeocoderStatus.OK) {
         let location = results[0].geometry.location;
