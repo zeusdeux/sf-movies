@@ -84,6 +84,8 @@ li {
   box-sizing: border-box;
   padding: 5px;
   box-shadow: 6px 6px 10px 0px #525252;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .map-search-container > .searchbar-container > .autocompletions-container li {

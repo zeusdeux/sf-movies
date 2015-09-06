@@ -21711,7 +21711,7 @@ var MapComponent = React.createClass({
               var infoContent = loc.name;
 
               infoContent += loc.director ? '<br />Directed by: ' + loc.director : '';
-              infoContent += loc.actors.length ? '<br />Actors: ' + loc.actors.filter(function (v) {
+              infoContent += loc.actors && loc.actors.length ? '<br />Actors: ' + loc.actors.filter(function (v) {
                 return !!v;
               }).join(', ') : '';
 
@@ -21727,31 +21727,9 @@ var MapComponent = React.createClass({
               });
 
               marker.addListener('click', function () {
-                var _iteratorNormalCompletion2 = true;
-                var _didIteratorError2 = false;
-                var _iteratorError2 = undefined;
-
-                try {
-                  for (var _iterator2 = _getIterator(_this4.state.markers.values()), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var m = _step2.value;
-
-                    if (m !== marker && m.__infoWindowOpen__) m.__infoWindow__.close();
-                  }
-                } catch (err) {
-                  _didIteratorError2 = true;
-                  _iteratorError2 = err;
-                } finally {
-                  try {
-                    if (!_iteratorNormalCompletion2 && _iterator2['return']) {
-                      _iterator2['return']();
-                    }
-                  } finally {
-                    if (_didIteratorError2) {
-                      throw _iteratorError2;
-                    }
-                  }
-                }
-
+                /*for (let m of this.state.markers.values()) {
+                  if (m !== marker && m.__infoWindowOpen__) m.__infoWindow__.close();
+                }*/
                 marker.__infoWindow__ = infoWindow;
                 if (marker.__infoWindowOpen__) {
                   infoWindow.close(_this4.state.map, marker);
