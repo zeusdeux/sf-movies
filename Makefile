@@ -28,4 +28,7 @@ clean:
 watch:
 	fswatch -o views/ public/ | xargs -n1 -I% make
 
-.PHONY: all clean watch
+test:
+	GEOCODING_API_KEY=AIzaSyA-G_zjmZifvfrpS8t8tcrg2pS0u5fpOVI NODE_ENV=production $(BIN)/mocha tests/*.js --harmony_arrow_functions --harmony_rest_parameters -r should --bail
+
+.PHONY: all clean watch test
