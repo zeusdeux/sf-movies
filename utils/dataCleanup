@@ -3,10 +3,11 @@
 /* eslint no-console: 0 */
 'use strict';
 
-const fs = require('fs');
-const files = process.argv.slice(2);
-const resolve = require('path').resolve;
-const filePaths = files.map(file => resolve(__dirname, file));
+const fs                  = require('fs');
+const files               = process.argv.slice(2);
+const resolve             = require('path').resolve;
+const filePaths           = files.map(file => resolve(__dirname, file));
+
 const makeListOfMovieObjs = (listOfMovieData) => {
   return listOfMovieData.reduce((p, movie) => {
     if (movie[10]) { // only if movie has location, add it to cleaned data
