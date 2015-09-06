@@ -14,23 +14,38 @@ function update(id, obj) {
 
 function filter(type, predicate) {
   d('filter: type %s predicate %s', type, predicate);
-  const rankByType = subSearch.transforms.rank(type);
-  const dataObj = {
-    data: db.sliceAsArrayFromIndex(0),
-    searchInProps: ['name', 'address']
-  };
 
-  return subSearch.search({
-    rank: rankByType,
-    noHighlight: subSearch.transforms.noHighlight,
-    pluck: function(obj) {
-      return obj.data;
-    }
-  }, dataObj, predicate);
+  if (predicate.length) {
+    const rankByType = subSearch.transforms.rank(type);
+    const dataObj = {
+      data: db.sliceAsArrayFromIndex(0),
+      searchInProps: ['name', 'address']
+    };
+
+    return subSearch.search({
+      rank: rankByType,
+      noHighlight: subSearch.transforms.noHighlight,
+      pluck: function(obj) {
+        return obj.data;
+      }
+    }, dataObj, predicate);
+  }
+  // if the predicate is empty, return an empty array of completions
+  // doing this here because by default, subsequence search returns
+  // the whole data list when you search for an empty string
+  return [];
+}
+
+function find(id) {
+  const loc = db.find(id);
+
+  if (!loc) throw new Error('No location found for given id ' + id);
+  else return loc;
 }
 
 module.exports = {
   getSlice,
   filter,
-  update
+  update,
+  find
 };
