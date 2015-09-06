@@ -206,7 +206,7 @@ const MapComponent       = React.createClass({
           let infoContent = loc.name;
 
           infoContent += loc.director ? '<br />Directed by: ' + loc.director : '';
-          infoContent += loc.actors.length? '<br />Actors: ' + loc.actors.filter(v => !!v).join(', ') : '';
+          infoContent += loc.actors && loc.actors.length? '<br />Actors: ' + loc.actors.filter(v => !!v).join(', ') : '';
 
           // setup info that is shown when marker is clicked
           const infoWindow = new this.props.gmap.InfoWindow({
@@ -220,9 +220,9 @@ const MapComponent       = React.createClass({
           });
 
           marker.addListener('click', () => {
-            for (let m of this.state.markers.values()) {
+            /*for (let m of this.state.markers.values()) {
               if (m !== marker && m.__infoWindowOpen__) m.__infoWindow__.close();
-            }
+            }*/
             marker.__infoWindow__ = infoWindow;
             if (marker.__infoWindowOpen__) {
               infoWindow.close(this.state.map, marker);
