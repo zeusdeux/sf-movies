@@ -21636,7 +21636,7 @@ var MapComponent = React.createClass({
   },
   getInitialState: function getInitialState() {
     var state = {
-      zoomLevel: 12,
+      zoomLevel: 13,
       geocoder: new this.props.gmap.Geocoder(),
       map: null,
       markers: new _Map(), // map, indexable by location id
@@ -21727,10 +21727,12 @@ var MapComponent = React.createClass({
               });
 
               marker.addListener('click', function () {
-                /*for (let m of this.state.markers.values()) {
+                /*
+                for (let m of this.state.markers.values()) {
                   if (m !== marker && m.__infoWindowOpen__) m.__infoWindow__.close();
-                }*/
+                }
                 marker.__infoWindow__ = infoWindow;
+                */
                 if (marker.__infoWindowOpen__) {
                   infoWindow.close(_this4.state.map, marker);
                   marker.__infoWindowOpen__ = false;
