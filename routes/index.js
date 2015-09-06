@@ -1,33 +1,41 @@
 /* eslint new-cap: 0 */
 'use strict';
 
-const express       = require('express');
-const d             = require('debug')('sfMovies:routes');
-const movieLocModel = require('../models/movieLocationsModel');
-let router          = express.Router();
+const express             = require('express');
+const request             = require('request');
+const geocodingApiKey     = process.env.GEOCODING_API_KEY;
+const d                   = require('debug')('sfMovies:routes');
+const movieLocModel       = require('../models/movieLocationsModel');
+let router                = express.Router();
+let googleGeocodingApiURL = 'https://maps.googleapis.com/maps/api/geocode/json?key=' + geocodingApiKey + '&';
 
+
+// crash early if google geocoding api key is not set
+if (!geocodingApiKey) throw new Error('No google api key found. Cannot make geocoding requests');
 
 /* GET home page */
 router.get('/', function(_, res) {
   res.render('index', { dev: process.env.NODE_ENV !== 'production' });
 });
 
-/* GET <count> movie location objects, starting from <id> */
+/* GET <count> movie location objects, starting from <index> */
 // a list of movie location objects is returned
 router.get('/locations', (req, res, next) => {
   d('GET /locations: query %o', req.query);
 
-  const count  = parseInt(req.query.count, 10) || 5;
-  const fromId = parseInt(req.query.from || req.session.lastIdSent || 0, 10);
+  const count   = parseInt(req.query.count, 10) || 5;
+  let fromIndex = parseInt(req.query.from, 10);
 
-  d('GET /locations: count %d fromId %d', count, fromId);
+  fromIndex = isNaN(fromIndex) ? req.session.lastIndexSent || 0 : fromIndex;
+
+  d('GET /locations: count %d fromIndex %d', count, fromIndex);
 
   try {
-    const data = movieLocModel.getSlice(fromId + count, fromId);
+    const data = movieLocModel.getSlice(fromIndex + count, fromIndex);
 
     d('GET /locations: data %o', data);
 
-    req.session.lastIdSent = fromId + count;
+    req.session.lastIndexSent = fromIndex + count;
     d('GET /locations: updates session %o', req.session);
 
     res.json(data);
@@ -36,6 +44,53 @@ router.get('/locations', (req, res, next) => {
     next(e);
   }
 });
+
+
+/* GET geocoded location given a valid location id */
+router.get('/geocode/:locationId', (req, res, next) => {
+  const locationId = req.params.locationId;
+
+  d('GET /geocode/:locationId: %s', locationId);
+
+  try {
+    const loc = movieLocModel.find(locationId);
+
+    // if location already has lat and long, return it as is
+    if (loc.lat && loc.long) res.json(loc);
+    else {
+      const address = encodeURIComponent(loc.address.split(/\bfrom\b/i)[0].trim() + ', San Francisco, CA');
+
+      // make request to google's geocoding api for the given address
+      request(googleGeocodingApiURL + 'address=' + address, function(err, response, body) {
+        d('GET /geocode/:locationId: Request url %s', googleGeocodingApiURL + 'address=' + address);
+        d('GET /geocode/:locationId: In request callback. location id is %s', locationId);
+        d('GET /geocode/:locationId: address %s', address);
+        d('GET /geocode/:locationId: body', body);
+
+        if (err) next(err);
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          body = JSON.parse(body);
+
+          d('GET /geocode/:locationId: google response status %s', body.status);
+          d('GET /geocode/:locationId: lat, long: %o', body.results[0].geometry.location);
+          if ('OK' === body.status) {
+            const location = body.results[0].geometry.location;
+
+            loc.lat = location.lat;
+            loc.long = location.lng;
+
+            movieLocModel.update(loc.id, loc);
+            res.json(loc);
+          } else next(new Error('Could not geocode location'));
+        } else next(new Error(response.statusMessage));
+      });
+    }
+  }
+  catch(e) {
+    next(e);
+  }
+});
+
 
 /* GET completions */
 // a filtered list of movie location objects is returned
@@ -55,23 +110,6 @@ router.get('/complete', (req, res, next) => {
 
     d('GET /complete: completions: %o', completions);
     res.json(completions);
-  }
-  catch(e) {
-    next(e);
-  }
-});
-
-/* POST lat, lang for a location. Add lat long to db for given location id */
-router.post('/update/:id', (req, res, next) => {
-  const lat   = req.body.lat; // get post param from body
-  const long  = req.body.long; // get post param from body
-  const locId = req.params.id;
-
-  d('POST /update/:id: req body is %o', req.body);
-
-  try {
-    movieLocModel.update(locId, { lat, long });
-    res.sendStatus(200);
   }
   catch(e) {
     next(e);

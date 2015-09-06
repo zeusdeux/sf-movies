@@ -17,6 +17,7 @@
     "isomorphic-fetch": "^2.1.1",
     "morgan": "~1.6.1",
     "react": "^0.13.3",
+    "request": "^2.61.0",
     "serve-favicon": "~2.3.0",
     "socket.io": "^1.3.6",
     "subsequence-search": "git+https://github.com/zeusdeux/subsequence-search.git#b55cbaa6adf0fa62ce361fa84d2d72acb2fc09a6"
