@@ -86,6 +86,14 @@ function find(id) {
   d('Id %s', id);
   assert(isNonFalsyAndString(id), 'id should be non-falsy and a string');
 
+  for (let i = 0; i < db.length; i++) if (id === db[i].id) return db[i];
+}
+
+// findIndex :: Id -> Int
+function findIndex(id) {
+  d('Id %s', id);
+  assert(isNonFalsyAndString(id), 'id should be non-falsy and a string');
+
   for (let i = 0; i < db.length; i++) {
     let curr = db[i];
 
@@ -107,7 +115,7 @@ function insert(movieLocation) {
 
 // update :: Id -> Object -> IO ()
 function update(id, obj) {
-  let index = find(id);
+  let index = findIndex(id);
 
   assert(isInt(index), 'index should be an integer');
   d('update: id %s obj %o and found id at index %d', id, obj, index);
@@ -155,6 +163,7 @@ module.exports = {
   find,
   insert,
   update,
+  findIndex,
   writeToFile,
   panicDumpToFile,
   makeMovieLocation,
