@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node --harmony_arrow_functions --harmony_rest_parameters ./bin/www",
-    "monitor": "nodemon --harmony_arrow_functions --harmony_rest_parameters ./bin/www"
+    "monitor": "nodemon --harmony_arrow_functions --harmony_rest_parameters ./bin/www",
+    "test": "make test"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
