@@ -3,7 +3,7 @@ Shows on a map where movies have been filmed in SF
 
 The application is available at [sf-movies.mudit.xyz](http://sf-movies.mudit.xyz).
 
-If it doesn't give any results that means the app has probably cross the google geocoding quote for the day. If that occurs, ping me and I shall add a fresh key which should give us another 2500 geocoding requests for the day.
+If it doesn't give any results that means the app has probably crossed the google geocoding quote for the day. If that occurs, ping me and I shall add a fresh key which should give us another 2500 geocoding requests for the day.
 
 The stack I have used is node at the back, a simple in memory db that I wrote, expressjs as the web framework and reactjs in the front.
 
