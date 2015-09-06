@@ -1,10 +1,12 @@
 'use strict';
 
-const db        = require('../data/db');
+const db        = require('../data/db')();
 const subSearch = require('subsequence-search');
 const d         = require('debug')('sfMovies:movieLocModel');
 
-function getSlice(count, fromIndex) {
+
+function getSlice(fromIndex, count) {
+  d('getSlice: fromIndex %d count %d', fromIndex, count);
   return db.sliceAsArrayFromIndex(fromIndex, count);
 }
 
@@ -37,10 +39,7 @@ function filter(type, predicate) {
 }
 
 function find(id) {
-  const loc = db.find(id);
-
-  if (!loc) throw new Error('No location found for given id ' + id);
-  else return loc;
+  return db.find(id);
 }
 
 module.exports = {
