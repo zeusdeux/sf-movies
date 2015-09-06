@@ -1,12 +1,11 @@
 'use strict';
 
-const fs       = require('fs');
 const assert   = require('assert');
 const is       = require('../utils/is');
+const resolve  = require('path').resolve;
 const d        = require('debug')('sfMovies:db');
-let db         = require('../data/movie-locations-cleaned');
-
 const and      = is.and;
+const not      = is.not;
 const isNum    = is.isNum;
 const isInt    = is.isInt;
 const isYear   = is.isYear;
@@ -15,132 +14,132 @@ const isArray  = is.isArray;
 const isString = is.isString;
 
 
-// make subset of db for dev
-if (process.env.NODE_ENV !== 'production') {
-  let i      = 0;
-  let dbTemp = {};
-  let keys   = Object.keys(require('../data/movie-locations-cleaned'));
+// changing db to return a function that accepts a path
+// to the json it should treat as the db
+// This is similar to specifying what db you want the client
+// to connect to from the model
+module.exports = function(pathToDbJson) {
+  pathToDbJson = resolve(__dirname, pathToDbJson ? pathToDbJson : './movie-locations-cleaned');
+  d('db: db path %s', pathToDbJson);
 
-  while(i < 20) dbTemp[keys[i]] = db[keys[i++]];
+  let db       = require(pathToDbJson);
 
-  db = dbTemp;
-}
+  // make subset of db for dev
+  if (process.env.NODE_ENV !== 'production') {
+    let i      = 0;
+    let dbTemp = {};
+    let keys   = Object.keys(require(pathToDbJson));
 
-/*
+    while(i < 20) dbTemp[keys[i]] = db[keys[i++]];
 
-data MovieLocation = { name :: String
-                     , year :: Int
-                     , address :: String
-                     , funFact :: Maybe String
-                     , production :: Maybe String
-                     , distributor :: Maybe String
-                     , director :: String
-                     , writer :: Maybe String
-                     , actors :: Maybe [String]
-                     }
-
-type Id = String
-
-*/
-
-
-// isNonFalsyAndString :: a -> Bool
-function isNonFalsyAndString(val) {
-  return and(isFalsy, isString)(val);
-}
-
-// isMovieLocation :: Object -> Either Error Bool
-function isMovieLocation(obj) {
-  d('isMovieLocation: object to test is %o', obj);
-  assert(obj.hasOwnProperty('name') && isNonFalsyAndString(obj.name), 'name should be a non-empty string');
-  assert(obj.hasOwnProperty('year') && isYear(obj.year), 'year should be a 4 digit integer');
-  assert(obj.hasOwnProperty('address') && isNonFalsyAndString(obj.address), 'address should be a non-empty string');
-  assert(obj.hasOwnProperty('director') && isNonFalsyAndString(obj.director), 'director should be a non-empty string');
-
-  if (obj.hasOwnProperty('funFact')) assert(isString(obj.funFact), 'funFact should be a non-empty string');
-  if (obj.hasOwnProperty('production')) assert(isString(obj.production), 'production should be a non-empty string');
-  if (obj.hasOwnProperty('distributor')) assert(isString(obj.distributor), 'distributor should be a non-empty string');
-  if (obj.hasOwnProperty('writer')) assert(isString(obj.writer), 'writer should be a non-empty string');
-  if (obj.hasOwnProperty('actors')) assert(isArray(obj.actors), 'actors should be an array');
-  if (obj.hasOwnProperty('lat')) assert(isNum(obj.lat), 'lat should be an number');
-  if (obj.hasOwnProperty('long')) assert(isNum(obj.long), 'long should be an number');
-
-  return true;
-}
-
-// find :: Id -> MovieLocation
-function find(id) {
-  d('Id %s', id);
-  assert(isNonFalsyAndString(id), 'id should be non-falsy and a string');
-
-  return db[id];
-}
-
-// insert :: MovieLocation -> Either Error Int
-function insert(movieLocation) {
-  d('insert: movie location being inserted is %o', movieLocation);
-  try {
-    if (isMovieLocation(movieLocation)) return db.push(movieLocation);
+    db = dbTemp;
   }
-  catch (e) {
-    throw e;
+
+  /*
+
+    data MovieLocation = {
+      name :: String
+    , year :: Int
+    , address :: String
+    , funFact :: Maybe String
+    , production :: Maybe String
+    , distributor :: Maybe String
+    , director :: String
+    , writer :: Maybe String
+    , actors :: Maybe [String]
+    }
+
+    type Id = String
+
+  */
+
+
+  // isNonFalsyAndString :: a -> Bool
+  function isNonFalsyAndString(val) {
+    return and(not(isFalsy), isString)(val);
   }
-}
 
-// update :: Id -> Object -> IO ()
-function update(id, obj) {
-  d('update: id %s obj %o', id, obj);
-  let location = db[id];
+  // isMovieLocation :: Object -> Either Error Bool
+  function isMovieLocation(obj) {
+    d('isMovieLocation: object to test is %o', obj);
+    assert(obj.hasOwnProperty('id') && isNonFalsyAndString(obj.id), 'Id should be a non-falst string');
+    assert(obj.hasOwnProperty('name') && isNonFalsyAndString(obj.name), 'name should be a non-empty string');
+    assert(obj.hasOwnProperty('year') && isYear(obj.year), 'year should be a 4 digit integer');
+    assert(obj.hasOwnProperty('address') && isNonFalsyAndString(obj.address), 'address should be a non-empty string');
+    assert(obj.hasOwnProperty('director') && isNonFalsyAndString(obj.director), 'director should be a non-empty string');
 
-  if (location) Object.keys(obj).forEach(key => location[key] = obj[key]);
-  else throw new Error('Id ' + id + ' not found');
-}
+    if (obj.hasOwnProperty('funFact')) assert(isString(obj.funFact), 'funFact should be a non-empty string');
+    if (obj.hasOwnProperty('production')) assert(isString(obj.production), 'production should be a non-empty string');
+    if (obj.hasOwnProperty('distributor')) assert(isString(obj.distributor), 'distributor should be a non-empty string');
+    if (obj.hasOwnProperty('writer')) assert(isString(obj.writer), 'writer should be a non-empty string');
+    if (obj.hasOwnProperty('actors')) assert(isArray(obj.actors), 'actors should be an array');
+    if (obj.hasOwnProperty('lat')) assert(isNum(obj.lat), 'lat should be an number');
+    if (obj.hasOwnProperty('long')) assert(isNum(obj.long), 'long should be an number');
 
-// sliceAsArrayFromIndex :: Int -> Maybe Int -> [MovieLocation]
-function sliceAsArrayFromIndex(fromIndex, toIndex) {
-  d('from index %d toIndex %d count %d', fromIndex, toIndex, toIndex - fromIndex);
-
-  const dbAsArray = [];
-
-  Object.keys(db).forEach(key => {
-    dbAsArray.push(db[key]);
-  });
-
-  assert(isInt(fromIndex), 'fromIndex should be an integer');
-  if (toIndex) assert(isInt(toIndex), 'toIndex should be an integer');
-
-  const slicedDb = toIndex ? dbAsArray.slice(fromIndex, toIndex) : dbAsArray.slice(fromIndex);
-
-  d('db as array from index %d is %o', fromIndex, slicedDb);
-  return slicedDb;
-}
-
-// writeToFile :: Maybe FilePath -> IO ()
-function writeToFile(filePath, cb) {
-  filePath = filePath || '../data/movie-locations-cleaned.json_backup' + new Date().toUTCString();
-  d('filePath: %s', filePath);
-  try {
-    fs.writeFile(filePath, JSON.stringify(db), cb);
+    return true;
   }
-  catch(e) {
-    return cb(e);
+
+  // find :: Id -> MovieLocation
+  function find(id) {
+    d('Id %s', id);
+    assert(isNonFalsyAndString(id), 'id should be non-falsy and a string');
+
+    if (!db[id]) throw new Error('No location found for given id ' + id);
+    else return db[id];
   }
-}
 
-// call this only when things are going to complete shit
-// for example, on app.error or on SIGINT/SIGTERM
-// panicDumpToFile :: Maybe FilePath -> IO ()
-function panicDumpToFile(filePath) {
-  filePath = filePath || '../data/movie-locations-cleaned.json_backup' + new Date().toUTCString();
-  d('PANIC! Filepath: %s', filePath);
-  fs.writeFile(filePath, JSON.stringify(db)); // not catching errors as this is called during panic anyway
-}
+  // insert :: MovieLocation -> Either Error MovieLocation
+  function insert(movieLocation) {
+    d('insert: movie location being inserted is %o', movieLocation);
+    try {
+      if (isMovieLocation(movieLocation)) {
+        db[movieLocation.id] = movieLocation;
+        return db[movieLocation.id];
+      }
+    }
+    catch (e) {
+      throw e;
+    }
+  }
 
-module.exports = {
-  find,
-  insert,
-  update,
-  writeToFile,
-  panicDumpToFile,
-  sliceAsArrayFromIndex
+  // update :: Id -> Object -> IO ()
+  function update(id, obj) {
+    d('update: id %s obj %o', id, obj);
+    let location = db[id];
+
+    Object.keys(obj).forEach(key => location[key] = obj[key]);
+  }
+
+  // drop :: Id -> IO ()
+  function drop(id) {
+    d('drop: %s', id);
+    if (find(id)) delete db[id];
+  }
+
+  // sliceAsArrayFromIndex :: Int -> Maybe Int -> [MovieLocation]
+  function sliceAsArrayFromIndex(fromIndex, toIndex) {
+    d('from index %d toIndex %d count %d', fromIndex, toIndex, toIndex - fromIndex);
+
+    let dbAsArray = [];
+
+    Object.keys(db).forEach(key => {
+      if (db[key]) dbAsArray.push(db[key]);
+    });
+
+    assert(isInt(fromIndex), 'fromIndex should be an integer');
+    if (toIndex) assert(isInt(toIndex), 'toIndex should be an integer');
+
+    const slicedDb = toIndex ? dbAsArray.slice(fromIndex, toIndex) : dbAsArray.slice(fromIndex);
+
+    d('db as array from index %d is %o', fromIndex, slicedDb);
+    return slicedDb;
+  }
+
+  return {
+    find,
+    insert,
+    update,
+    drop,
+    sliceAsArrayFromIndex
+  };
 };
