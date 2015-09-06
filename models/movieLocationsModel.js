@@ -1,6 +1,6 @@
 'use strict';
 
-const db        = require('./db');
+const db        = require('../data/db');
 const subSearch = require('subsequence-search');
 const d         = require('debug')('sfMovies:movieLocModel');
 
