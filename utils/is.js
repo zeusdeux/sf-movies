@@ -12,7 +12,7 @@ function isArray(a) {
 
 // isNum :: a -> Bool
 function isNum(val) {
-  return !isNaN(parseFloat(val, 10));
+  return 'number' === typeof val && !isNaN(parseFloat(val, 10));
 }
 
 // isInt :: a -> Bool
@@ -29,9 +29,9 @@ function isYear(val) {
   return isInt(val) && 4 === valAsStr.length;
 }
 
-// isFalse :: a -> Bool
+// isFalsy :: a -> Bool
 function isFalsy(val) {
-  return !!val;
+  return !val;
 }
 
 // and :: (a -> Bool) -> (a -> Bool) -> (a -> Bool)
@@ -44,6 +44,11 @@ function or(f, g) {
   return (p) => f(p) || g(p);
 }
 
+// not :: (a -> Bool) -> (a -> Bool)
+function not(f) {
+  return (p) => !f(p);
+}
+
 module.exports = {
   isString,
   isArray,
@@ -51,5 +56,6 @@ module.exports = {
   isYear,
   isInt,
   and,
+  not,
   or
 };
