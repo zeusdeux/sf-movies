@@ -1,0 +1,38 @@
+{
+  "abc": {
+    "id": "abc",
+    "name": "180",
+    "year": "2011",
+    "address": "Randall Musuem",
+    "funFact": null,
+    "productionCompany": "SPI Cinemas",
+    "distributor": null,
+    "director": "Jayendra",
+    "writer": "Umarji Anuradha, Jayendra, Aarthi Sriram, & Suba",
+    "actors": [
+      "Siddarth",
+      "Nithya Menon",
+      "Priya Anand"
+    ],
+    "lat": 37.7643243,
+    "long": -122.4384077
+  },
+  "def": {
+    "id": "def",
+    "name": "500 days of summer",
+    "year": "2001",
+    "address": "Randall Musuem",
+    "funFact": "Something",
+    "productionCompany": "SPI Cinemas",
+    "distributor": null,
+    "director": "Jayendra",
+    "writer": "Umarji Anuradha, Jayendra, Aarthi Sriram, & Suba",
+    "actors": [
+      "Siddarth",
+      "Nithya Menon",
+      "Priya Anand"
+    ],
+    "lat": 37.77,
+    "long": -122.456
+  }
+}
