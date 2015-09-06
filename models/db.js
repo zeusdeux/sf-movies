@@ -2,9 +2,9 @@
 
 const fs       = require('fs');
 const assert   = require('assert');
-const d        = require('debug')('sfMovies:db');
 const is       = require('../utils/is');
-const db       = require('../data/movie-locations-cleaned').slice(0, 20);
+const d        = require('debug')('sfMovies:db');
+let db         = require('../data/movie-locations-cleaned');
 
 const and      = is.and;
 const isNum    = is.isNum;
@@ -13,6 +13,18 @@ const isYear   = is.isYear;
 const isFalsy  = is.isFalsy;
 const isArray  = is.isArray;
 const isString = is.isString;
+
+
+// make subset of db for dev
+if (process.env.NODE_ENV !== 'production') {
+  let i      = 0;
+  let dbTemp = {};
+  let keys   = Object.keys(require('../data/movie-locations-cleaned'));
+
+  while(i < 20) dbTemp[keys[i]] = db[keys[i++]];
+
+  db = dbTemp;
+}
 
 /*
 
@@ -58,35 +70,12 @@ function isMovieLocation(obj) {
   return true;
 }
 
-// makeMovieLocation :: String -> Int -> String -> String -> Object -> MovieLocation
-function makeMovieLocation(name, year, address, director, optionals) {
-  d('name: %s, year: %d, address: %s, director: %s, optionals: %o', optionals);
-  assert(name && isString(name), 'name should be a non-empty string');
-  assert(year && isYear(year), 'year should be an 4 digit integer');
-  assert(address && isString(address), 'address should be a non-empty string');
-  assert(director && isString(director), 'director should be a non-empty string');
-
-  return {
-    name,
-    year,
-    address,
-    funFact: optionals.funFact,
-    production: optionals.production,
-    distributor: optionals.distributor,
-    director,
-    writer: optionals.writer,
-    actors: optionals.actors,
-    lat: optionals.lat,
-    long: optionals.long
-  };
-}
-
 // find :: Id -> MovieLocation
 function find(id) {
   d('Id %s', id);
   assert(isNonFalsyAndString(id), 'id should be non-falsy and a string');
 
-  for (let i = 0; i < db.length; i++) if (id === db[i].id) return db[i];
+  return db[id];
 }
 
 // findIndex :: Id -> Int
@@ -115,24 +104,27 @@ function insert(movieLocation) {
 
 // update :: Id -> Object -> IO ()
 function update(id, obj) {
-  let index = findIndex(id);
+  d('update: id %s obj %o', id, obj);
+  let location = db[id];
 
-  assert(isInt(index), 'index should be an integer');
-  d('update: id %s obj %o and found id at index %d', id, obj, index);
-
-  if (index > -1) Object.keys(obj).forEach(key => db[index][key] = obj[key]);
+  if (location) Object.keys(obj).forEach(key => location[key] = obj[key]);
   else throw new Error('Id ' + id + ' not found');
 }
 
 // sliceAsArrayFromIndex :: Int -> Maybe [MovieLocation]
 function sliceAsArrayFromIndex(fromIndex, toIndex) {
-  d(db.length);
   d('from index %d toIndex %d count %d', fromIndex, toIndex, toIndex - fromIndex);
+
+  const dbAsArray = [];
+
+  Object.keys(db).forEach(key => {
+    dbAsArray.push(db[key]);
+  });
 
   assert(isInt(fromIndex), 'fromIndex should be an integer');
   if (toIndex) assert(isInt(toIndex), 'toIndex should be an integer');
 
-  const slicedDb = toIndex ? db.slice(fromIndex, toIndex) : db.slice(fromIndex);
+  const slicedDb = toIndex ? dbAsArray.slice(fromIndex, toIndex) : dbAsArray.slice(fromIndex);
 
   d('db as array from index %d is %o', fromIndex, slicedDb);
   return slicedDb;
@@ -166,6 +158,5 @@ module.exports = {
   findIndex,
   writeToFile,
   panicDumpToFile,
-  makeMovieLocation,
   sliceAsArrayFromIndex
 };

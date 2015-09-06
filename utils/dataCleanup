@@ -8,21 +8,25 @@ const files = process.argv.slice(2);
 const resolve = require('path').resolve;
 const filePaths = files.map(file => resolve(__dirname, file));
 const makeListOfMovieObjs = (listOfMovieData) => {
-  return listOfMovieData.map(movie => {
-    if (!movie[10]) return null; // if no address for movie, ignore it
-    return {
-      id: movie[1],
-      name: movie[8],
-      year: movie[9],
-      address: movie[10],
-      funFact: movie[11],
-      productionCompany: movie[12],
-      distributor: movie[13],
-      director: movie[14],
-      writer: movie[15],
-      actors: movie.slice(16)
-    };
-  }).filter(v => !!v); // filter nulls
+  return listOfMovieData.reduce((p, movie) => {
+    if (movie[10]) { // only if movie has location, add it to cleaned data
+      p[movie[1]] = {
+        id: movie[1],
+        name: movie[8],
+        year: movie[9],
+        address: movie[10],
+        funFact: movie[11],
+        productionCompany: movie[12],
+        distributor: movie[13],
+        director: movie[14],
+        writer: movie[15],
+        actors: movie.slice(16)
+      };
+    }
+    // else if no address for movie, ignore it and return p unchanged
+    return p;
+
+  }, {}); // filter nulls
 };
 
 // side effecting in here hence the forEach
